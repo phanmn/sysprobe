@@ -97,7 +97,7 @@ import (
     "fmt"
     "time"
 
-    "github.com/x16z/sysprobe"
+    "github.com/phanmn/sysprobe"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-module github.com/x16z/sysprobe
+module github.com/phanmn/sysprobe
 
 go 1.26
 

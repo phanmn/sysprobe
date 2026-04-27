@@ -1,10 +1,10 @@
 # sysprobe — CLI Agent Context
 
 ## What This Is
-A standalone Go package that extracts system metric collection logic from the [Beszel](https://github.com/x16z/beszel) monitoring agent. Provides CPU, memory, disk I/O + space, network I/O, and GPU (nvidia-smi) metrics via a single `Collect()` call. Mirrors Beszel's metric types exactly.
+A standalone Go package that extracts system metric collection logic from the [Beszel](https://github.com/phanmn/beszel) monitoring agent. Provides CPU, memory, disk I/O + space, network I/O, and GPU (nvidia-smi) metrics via a single `Collect()` call. Mirrors Beszel's metric types exactly.
 
 ## Module
-- **Path**: `github.com/x16z/sysprobe`
+- **Path**: `github.com/phanmn/sysprobe`
 - **Go version**: 1.26+
 - **Single dependency**: `github.com/shirou/gopsutil/v4` (all metric sources)
 - **Layout**: Flat single package at module root — no subdirectories, no internal packages
@@ -53,7 +53,7 @@ rtk go vet .         # static analysis
 ```
 
 ## Critical Context for LLMs
-- Module path is `github.com/x16z/sysprobe`. Import with `go get` after pushing to GitHub, or use `go.work` for local dev.
+- Module path is `github.com/phanmn/sysprobe`. Import with `go get` after pushing to GitHub, or use `go.work` for local dev.
 - All metric struct fields have `json:` tags — callers can marshal directly with `encoding/json` without using the provided helpers.
 - `PreviousState` is a single struct that holds all delta-tracking state (CPU, disk I/O, network counters) plus GPU snapshot. Caller passes it back verbatim on each tick.
 - No git submodules, no vendoring, no Makefile — keep it minimal.
