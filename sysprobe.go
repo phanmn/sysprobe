@@ -37,12 +37,12 @@ type Options struct {
 
 // Metrics holds all collected system metrics for a single tick.
 type Metrics struct {
-	Timestamp    time.Time `json:"timestamp"`
-	CPU          *CPUMetrics
-	Memory       *MemoryMetrics
-	DiskIO       []DiskIOMetric
-	DiskSpace    []DiskSpaceMetric
-	Network      []NetworkMetric
+	Timestamp time.Time `json:"timestamp"`
+	CPU       *CPUMetrics
+	Memory    *MemoryMetrics
+	DiskIO    []DiskIOMetric
+	DiskSpace []DiskSpaceMetric
+	Network   []NetworkMetric
 }
 
 // CPUMetrics holds CPU usage percentages.
@@ -53,13 +53,13 @@ type CPUMetrics struct {
 
 // MemoryMetrics holds memory and swap usage in bytes.
 type MemoryMetrics struct {
-	Total        uint64  `json:"total_bytes"`
-	Used         uint64  `json:"used_bytes"`
-	UsedPercent  float64 `json:"used_percent"`
-	Available    uint64  `json:"available_bytes"`
-	SwapTotal    uint64  `json:"swap_total_bytes"`
-	SwapUsed     uint64  `json:"swap_used_bytes"`
-	SwapUsedPct  float64 `json:"swap_used_percent"`
+	Total       uint64  `json:"total_bytes"`
+	Used        uint64  `json:"used_bytes"`
+	UsedPercent float64 `json:"used_percent"`
+	Available   uint64  `json:"available_bytes"`
+	SwapTotal   uint64  `json:"swap_total_bytes"`
+	SwapUsed    uint64  `json:"swap_used_bytes"`
+	SwapUsedPct float64 `json:"swap_used_percent"`
 }
 
 // DiskIOMetric holds delta I/O counters for a single disk device.
@@ -84,12 +84,12 @@ type DiskSpaceMetric struct {
 
 // NetworkMetric holds bandwidth for a single network interface (bytes/sec).
 type NetworkMetric struct {
-	Name          string  `json:"name"`
-	MAC           string  `json:"mac"`
-	MTU           int     `json:"mtu"`
-	SentBps       float64 `json:"sent_bps"`
-	ReceivedBps   float64 `json:"received_bps"`
-	HasPublicIP   bool    `json:"has_public_ip"`
+	Name           string  `json:"name"`
+	MAC            string  `json:"mac"`
+	MTU            int     `json:"mtu"`
+	BytesOutPerSec float64 `json:"bytes_out_per_sec"`
+	BytesInPerSec  float64 `json:"bytes_in_per_sec"`
+	HasPublicIP    bool    `json:"has_public_ip"`
 }
 
 // TickState holds the previous tick's raw counters for delta calculation.
@@ -140,15 +140,15 @@ type netCounters struct {
 
 // GPUMetrics holds NVIDIA GPU telemetry.
 type GPUMetrics struct {
-	Timestamp   time.Time `json:"timestamp"`
-	Temperature float64   `json:"temperature_c"`
-	ClockFreq   float64   `json:"clock_freq_mhz"`
-	MemoryUsed  float64   `json:"memory_used_mb"`
-	MemoryTotal float64   `json:"memory_total_mb"`
-	Power       float64   `json:"power_watts"`
-	FanSpeed    float64   `json:"fan_speed_percent"`
-	UtilizationGPU  float64 `json:"utilization_gpu_percent"`
-	UtilizationMem  float64 `json:"utilization_mem_percent"`
+	Timestamp      time.Time `json:"timestamp"`
+	Temperature    float64   `json:"temperature_c"`
+	ClockFreq      float64   `json:"clock_freq_mhz"`
+	MemoryUsed     float64   `json:"memory_used_mb"`
+	MemoryTotal    float64   `json:"memory_total_mb"`
+	Power          float64   `json:"power_watts"`
+	FanSpeed       float64   `json:"fan_speed_percent"`
+	UtilizationGPU float64   `json:"utilization_gpu_percent"`
+	UtilizationMem float64   `json:"utilization_mem_percent"`
 }
 
 // GPUTickState is unused (GPU metrics are polled absolutely).

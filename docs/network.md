@@ -74,8 +74,8 @@ type NetworkMetric struct {
     Name          string  // interface name (e.g., "eth0", "en0")
     MAC           string  // hardware address ("xx:xx:xx:xx:xx:xx")
     MTU           int     // maximum transmission unit
-    SentBps       float64 // outbound bandwidth in bytes/sec
-    ReceivedBps   float64 // inbound bandwidth in bytes/sec
+    BytesOutPerSec       float64 // outbound bandwidth in bytes/sec
+    BytesInPerSec   float64 // inbound bandwidth in bytes/sec
     HasPublicIP   bool    // true if any assigned IP is globally routable
 }
 
@@ -112,14 +112,14 @@ for _, n := range metrics.Network {
         pubFlag = " [PUBLIC]"
     }
     fmt.Printf("%s (%s, MTU %d): TX=%.0f B/s RX=%.0f B/s%s\n",
-        n.Name, n.MAC, n.MTU, n.SentBps, n.ReceivedBps, pubFlag)
+        n.Name, n.MAC, n.MTU, n.BytesOutPerSec, n.BytesInPerSec, pubFlag)
 }
 ```
 
 ## Notes for LLMs
 
 - Network metrics are **delta-based** — first tick returns zeros. Pass back `NetworkTickState` each tick.
-- Bandwidth output is **bytes/sec** (`SentBps`, `ReceivedBps`), not MB/s or cumulative bytes.
+- Bandwidth output is **bytes/sec** (`BytesOutPerSec`, `BytesInPerSec`), not MB/s or cumulative bytes.
 - `HasPublicIP` is computed fresh each tick from current interface addresses.
 - If `psnet.Interfaces()` fails, public IP detection is silently skipped (map stays empty).
 - MAC addresses use standard `net.HardwareAddr.String()` format across all platforms.

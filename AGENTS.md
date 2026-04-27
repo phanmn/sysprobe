@@ -25,7 +25,7 @@ Provides CPU, memory, disk I/O + space, network I/O, and GPU (nvidia-smi) metric
 | Memory | Absolute | Bytes (uint64) for total/used/available/swap; float64 % for used/swap percent | No rounding on byte values |
 | Disk I/O | Delta | ReadBps / WriteBps (bytes/sec), IOPSRead / IOPSWrite | Timestamp-tracked deltas per device |
 | Disk Space | Absolute | Bytes for total/used/free | Per mount point, no delta needed |
-| Network | Delta | SentBps / ReceivedBps (bytes/sec) + `HasPublicIP` bool | Timestamp-tracked deltas; public IP detection covers both IPv4 and IPv6 non-private ranges |
+| Network | Delta | BytesOutPerSec / BytesInPerSec (bytes/sec) + `HasPublicIP` bool | Timestamp-tracked deltas; public IP detection covers both IPv4 and IPv6 non-private ranges |
 | GPU | Async snapshot | Memory %, Temp °C, Utilization %, Power W | Parsed from `nvidia-smi` CSV output, background goroutine |
 
 ## Key Conventions

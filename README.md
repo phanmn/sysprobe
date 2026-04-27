@@ -52,7 +52,7 @@ func main() {
 
 		for _, n := range metrics.Network {
 		fmt.Printf("Net %s: TX %.0f B/s, RX %.0f B/s\n",
-			n.Name, n.SentBps, n.ReceivedBps)
+			n.Name, n.BytesOutPerSec, n.BytesInPerSec)
 		}
 
 		time.Sleep(5 * time.Second)

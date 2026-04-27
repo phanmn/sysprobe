@@ -65,25 +65,25 @@ func networkCollect(opts Options, prev NetworkTickState) ([]NetworkMetric, Netwo
 				dt = 1
 			}
 
-			sentBps := float64(c.BytesSent-prevC.Sent) / dt
-			receivedBps := float64(c.BytesRecv-prevC.Received) / dt
+			bytesOutPerSec := float64(c.BytesSent-prevC.Sent) / dt
+			bytesInPerSec := float64(c.BytesRecv-prevC.Received) / dt
 
 			metrics = append(metrics, NetworkMetric{
-				Name:        c.Name,
-				MAC:         info.HardwareAddr,
-				MTU:         info.MTU,
-				SentBps:     roundTwo(sentBps),
-				ReceivedBps: roundTwo(receivedBps),
-				HasPublicIP: publicIPMap[c.Name],
+				Name:           c.Name,
+				MAC:            info.HardwareAddr,
+				MTU:            info.MTU,
+				BytesOutPerSec: roundTwo(bytesOutPerSec),
+				BytesInPerSec:  roundTwo(bytesInPerSec),
+				HasPublicIP:    publicIPMap[c.Name],
 			})
 		} else {
 			metrics = append(metrics, NetworkMetric{
-				Name:        c.Name,
-				MAC:         info.HardwareAddr,
-				MTU:         info.MTU,
-				SentBps:     0,
-				ReceivedBps: 0,
-				HasPublicIP: publicIPMap[c.Name],
+				Name:           c.Name,
+				MAC:            info.HardwareAddr,
+				MTU:            info.MTU,
+				BytesOutPerSec: 0,
+				BytesInPerSec:  0,
+				HasPublicIP:    publicIPMap[c.Name],
 			})
 		}
 

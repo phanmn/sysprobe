@@ -120,7 +120,7 @@ func TestCollectNetwork(t *testing.T) {
 		if n.Name == "" {
 			t.Error("network name should not be empty")
 		}
-		if n.SentBps < 0 || n.ReceivedBps < 0 {
+		if n.BytesOutPerSec < 0 || n.BytesInPerSec < 0 {
 			t.Errorf("negative network metrics for %s", n.Name)
 		}
 	}
