@@ -13,7 +13,7 @@ Source file: `sysprobe.go` (257 lines)
 ### Signature
 
 ```go
-func Collect(opts Options, prev PreviousState) (Metrics, PreviousState, error)
+func Collect(opts Options, prev TickState) (Metrics, TickState, error)
 ```
 
 ### Parameters
@@ -21,14 +21,14 @@ func Collect(opts Options, prev PreviousState) (Metrics, PreviousState, error)
 | Param | Purpose |
 |---|---|
 | `opts Options` | Controls which subsystems to enable and interface filtering rules |
-| `prev PreviousState` | State from previous call for delta calculation. Zero value on first call. |
+| `prev TickState` | State from previous call for delta calculation. Zero value on first call. |
 
 ### Returns
 
 | Return | Description |
 |---|---|
 | `Metrics` | Aggregated metrics for this tick. Fields are nil/empty for disabled collectors. |
-| `PreviousState` | New state to pass back on next call. Contains raw counters and timestamps. |
+| `TickState` | New state to pass back on next call. Contains raw counters and timestamps. |
 | `error` | Non-nil if any enabled collector fails. Failed collectors abort the entire tick. |
 
 ### Collection Order
@@ -109,7 +109,7 @@ func main() {
         Network:   true,
     }
 
-    var prev sysprobe.PreviousState
+    var prev sysprobe.TickState
     defer sysprobe.GPUStop()
 
     ticker := time.NewTicker(5 * time.Second)
@@ -137,7 +137,7 @@ func main() {
 ## Notes for LLMs
 
 - `Collect()` is **not** concurrent-safe — do not call from multiple goroutines simultaneously.
-- The returned `PreviousState` must be passed back verbatim on the next call. Modifying it will break delta calculations.
+- The returned `TickState` must be passed back verbatim on the next call. Modifying it will break delta calculations.
 - Disabled collectors return nil (for pointers) or empty slices (for arrays), not error.
 - Timestamp is set to `time.Now()` at the end of collection, after all collectors run.
 - GPU is collected separately via `GPUCollect()` — it's not part of the main `Collect()` call because it uses a background poller.

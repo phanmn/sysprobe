@@ -8,7 +8,7 @@ import (
 	psnet "github.com/shirou/gopsutil/v4/net"
 )
 
-func networkCollect(opts Options, prev NetworkPreviousState) ([]NetworkMetric, NetworkPreviousState, error) {
+func networkCollect(opts Options, prev NetworkTickState) ([]NetworkMetric, NetworkTickState, error) {
 	counters, err := psnet.IOCounters(true)
 	if err != nil {
 		return nil, prev, err
@@ -94,7 +94,7 @@ func networkCollect(opts Options, prev NetworkPreviousState) ([]NetworkMetric, N
 		}
 	}
 
-	return metrics, NetworkPreviousState{Counters: newCounters}, nil
+	return metrics, NetworkTickState{Counters: newCounters}, nil
 }
 
 // isPublicIP returns true if the address is globally routable (not private/reserved).

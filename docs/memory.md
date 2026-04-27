@@ -37,7 +37,7 @@ type MemoryMetrics struct {
     SwapUsedPct  float64 // used swap percentage (0-100)
 }
 
-type MemoryPreviousState struct{} // unused — no delta tracking
+type MemoryTickState struct{} // unused — no delta tracking
 ```
 
 ## Usage Pattern

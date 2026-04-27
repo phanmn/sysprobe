@@ -47,7 +47,7 @@ type GPUMetrics struct {
     UtilizationMem  float64   // GPU memory utilization %
 }
 
-type GPUPreviousState struct{} // unused — metrics are absolute snapshots
+type GPUTickState struct{} // unused — metrics are absolute snapshots
 ```
 
 ---

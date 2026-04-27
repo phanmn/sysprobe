@@ -12,7 +12,7 @@ func TestCollectBasic(t *testing.T) {
 		DiskIO: true,
 	}
 
-	var prev PreviousState
+	var prev TickState
 
 	metrics, newState, err := Collect(opts, prev)
 	if err != nil {
@@ -57,7 +57,7 @@ func TestCollectMemoryOnly(t *testing.T) {
 		Memory: true,
 	}
 
-	metrics, _, err := Collect(opts, PreviousState{})
+	metrics, _, err := Collect(opts, TickState{})
 	if err != nil {
 		t.Fatalf("collect failed: %v", err)
 	}
@@ -78,7 +78,7 @@ func TestCollectDiskSpace(t *testing.T) {
 		DiskSpace: true,
 	}
 
-	metrics, _, err := Collect(opts, PreviousState{})
+	metrics, _, err := Collect(opts, TickState{})
 	if err != nil {
 		t.Fatalf("collect failed: %v", err)
 	}
@@ -102,7 +102,7 @@ func TestCollectNetwork(t *testing.T) {
 		Network: true,
 	}
 
-	var prev PreviousState
+	var prev TickState
 
 	_, newState, err := Collect(opts, prev)
 	if err != nil {
@@ -129,7 +129,7 @@ func TestCollectNetwork(t *testing.T) {
 func TestOptionsDisableAll(t *testing.T) {
 	opts := Options{}
 
-	metrics, _, err := Collect(opts, PreviousState{})
+	metrics, _, err := Collect(opts, TickState{})
 	if err != nil {
 		t.Fatalf("collect with no options failed: %v", err)
 	}

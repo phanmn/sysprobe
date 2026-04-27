@@ -5,10 +5,10 @@ Platform-agnostic system metric collection for Go. Collects CPU, memory, disk I/
 ## Install
 
 ```bash
-go get github.com/henrygd/sysprobe
+go get github.com/phanmn/sysprobe
 ```
 
-Requires Go 1.26+.
+Requires Go 1.25+.
 
 ## Usage
 
@@ -20,7 +20,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/henrygd/sysprobe"
+	"github.com/phanmn/sysprobe"
 )
 
 func main() {
@@ -32,7 +32,7 @@ func main() {
 		Network:   true,
 	}
 
-	var prev sysprobe.PreviousState
+	var prev sysprobe.TickState
 
 	for {
 		metrics, newState, err := sysprobe.Collect(opts, prev)
@@ -42,8 +42,8 @@ func main() {
 		prev = newState
 
 		fmt.Printf("CPU avg: %.2f%%\n", metrics.CPU.Average)
-		fmt.Printf("Memory: %.0f / %.0f MB (%.1f%%)\n",
-			metrics.Memory.Used, metrics.Memory.Total, metrics.Memory.UsedPercent)
+		fmt.Printf("Memory: %.2f GB / %.2f GB (%.1f%%)\n",
+			float64(metrics.Memory.Used)/1e9, float64(metrics.Memory.Total)/1e9, metrics.Memory.UsedPercent)
 
 		for _, d := range metrics.DiskIO {
 			fmt.Printf("Disk %s: %s %.2f MB/s, %s %.2f MB/s\n",
@@ -51,8 +51,8 @@ func main() {
 		}
 
 		for _, n := range metrics.Network {
-	fmt.Printf("Net %s: TX %.0f B/s, RX %.0f B/s\n",
-			n.Name, n.SentBytes, n.ReceivedBytes)
+		fmt.Printf("Net %s: TX %.0f B/s, RX %.0f B/s\n",
+			n.Name, n.SentBps, n.ReceivedBps)
 		}
 
 		time.Sleep(5 * time.Second)
@@ -98,13 +98,13 @@ defer sysprobe.GPUStop()
 | Kind | Delta or Absolute | Notes |
 |------|-------------------|-------|
 | CPU | Delta | Per-core + average usage % |
-| Memory | Absolute | Total/used/available in MB |
+| Memory | Absolute | Total/used/available in bytes (uint64) |
 | Disk I/O | Delta | Read/write MB/s and IOPS per device |
 | Disk Space | Absolute | Total/free/used per mount point |
-| Network | Delta | Sent/received MB/s per interface |
+| Network | Delta | Sent/received bytes/sec per interface |
 | GPU | Absolute | Async nvidia-smi polling (~5s) |
 
-Delta-based metrics require passing `PreviousState` from the prior call. On the first call, pass an empty `PreviousState{}` - deltas will be zero until the second tick.
+Delta-based metrics require passing `TickState` from the prior call. On the first call, pass an empty `TickState{}` - deltas will be zero until the second tick.
 
 ## Network Filtering
 

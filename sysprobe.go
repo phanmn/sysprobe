@@ -92,25 +92,25 @@ type NetworkMetric struct {
 	HasPublicIP   bool    `json:"has_public_ip"`
 }
 
-// PreviousState holds the previous tick's raw counters for delta calculation.
-type PreviousState struct {
-	CPU       CPUPreviousState
-	Memory    MemoryPreviousState
-	DiskIO    DiskIOPreviousState
-	DiskSpace DiskSpacePreviousState
-	Network   NetworkPreviousState
+// TickState holds the previous tick's raw counters for delta calculation.
+type TickState struct {
+	CPU       CPUTickState
+	Memory    MemoryTickState
+	DiskIO    DiskIOTickState
+	DiskSpace DiskSpaceTickState
+	Network   NetworkTickState
 }
 
-// CPUPreviousState stores per-CPU times for usage rate calculation.
-type CPUPreviousState struct {
+// CPUTickState stores per-CPU times for usage rate calculation.
+type CPUTickState struct {
 	Times []cpu.TimesStat
 }
 
-// MemoryPreviousState is unused (memory metrics are absolute, not delta-based).
-type MemoryPreviousState struct{}
+// MemoryTickState is unused (memory metrics are absolute, not delta-based).
+type MemoryTickState struct{}
 
-// DiskIOPreviousState stores previous I/O counters keyed by device name.
-type DiskIOPreviousState struct {
+// DiskIOTickState stores previous I/O counters keyed by device name.
+type DiskIOTickState struct {
 	Counters map[string]diskIOCounters
 }
 
@@ -123,11 +123,11 @@ type diskIOCounters struct {
 	Time       time.Time
 }
 
-// DiskSpacePreviousState is unused (disk space metrics are absolute).
-type DiskSpacePreviousState struct{}
+// DiskSpaceTickState is unused (disk space metrics are absolute).
+type DiskSpaceTickState struct{}
 
-// NetworkPreviousState stores previous counters keyed by interface name.
-type NetworkPreviousState struct {
+// NetworkTickState stores previous counters keyed by interface name.
+type NetworkTickState struct {
 	Counters map[string]netCounters
 }
 
@@ -151,8 +151,8 @@ type GPUMetrics struct {
 	UtilizationMem  float64 `json:"utilization_mem_percent"`
 }
 
-// GPUPreviousState is unused (GPU metrics are polled absolutely).
-type GPUPreviousState struct{}
+// GPUTickState is unused (GPU metrics are polled absolutely).
+type GPUTickState struct{}
 
 var (
 	gpuMu    sync.Mutex
@@ -162,12 +162,12 @@ var (
 )
 
 // Collect gathers all enabled metrics for a single tick.
-// Pass the PreviousState returned from the prior call to compute deltas.
-// Returns the new PreviousState for the next call.
-func Collect(opts Options, prev PreviousState) (Metrics, PreviousState, error) {
+// Pass the TickState returned from the prior call to compute deltas.
+// Returns the new TickState for the next call.
+func Collect(opts Options, prev TickState) (Metrics, TickState, error) {
 	now := time.Now()
 	var m Metrics
-	var ps PreviousState
+	var ps TickState
 
 	if opts.CPU {
 		cpuMet, cpuPs, err := cpuCollect(prev.CPU)

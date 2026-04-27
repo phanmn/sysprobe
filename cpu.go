@@ -4,7 +4,7 @@ import (
 	"github.com/shirou/gopsutil/v4/cpu"
 )
 
-func cpuCollect(prev CPUPreviousState) (*CPUMetrics, CPUPreviousState, error) {
+func cpuCollect(prev CPUTickState) (*CPUMetrics, CPUTickState, error) {
 	times, err := cpu.Times(true)
 	if err != nil {
 		return nil, prev, err
@@ -39,6 +39,6 @@ func cpuCollect(prev CPUPreviousState) (*CPUMetrics, CPUPreviousState, error) {
 		metrics.Average = roundTwo(sum / float64(len(coreTotals)))
 	}
 
-	newPrev := CPUPreviousState{Times: times}
+	newPrev := CPUTickState{Times: times}
 	return metrics, newPrev, nil
 }

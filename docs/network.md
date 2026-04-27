@@ -79,7 +79,7 @@ type NetworkMetric struct {
     HasPublicIP   bool    // true if any assigned IP is globally routable
 }
 
-type NetworkPreviousState struct {
+type NetworkTickState struct {
     Counters map[string]netCounters // keyed by interface name
 }
 
@@ -118,7 +118,7 @@ for _, n := range metrics.Network {
 
 ## Notes for LLMs
 
-- Network metrics are **delta-based** — first tick returns zeros. Pass back `NetworkPreviousState` each tick.
+- Network metrics are **delta-based** — first tick returns zeros. Pass back `NetworkTickState` each tick.
 - Bandwidth output is **bytes/sec** (`SentBps`, `ReceivedBps`), not MB/s or cumulative bytes.
 - `HasPublicIP` is computed fresh each tick from current interface addresses.
 - If `psnet.Interfaces()` fails, public IP detection is silently skipped (map stays empty).

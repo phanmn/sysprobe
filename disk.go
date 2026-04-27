@@ -6,7 +6,7 @@ import (
 	"github.com/shirou/gopsutil/v4/disk"
 )
 
-func diskIOCollect(prev DiskIOPreviousState) ([]DiskIOMetric, DiskIOPreviousState, error) {
+func diskIOCollect(prev DiskIOTickState) ([]DiskIOMetric, DiskIOTickState, error) {
 	ioCounters, err := disk.IOCounters()
 	if err != nil {
 		return nil, prev, err
@@ -57,7 +57,7 @@ func diskIOCollect(prev DiskIOPreviousState) ([]DiskIOMetric, DiskIOPreviousStat
 		}
 	}
 
-	return metrics, DiskIOPreviousState{Counters: newCounters}, nil
+	return metrics, DiskIOTickState{Counters: newCounters}, nil
 }
 
 func diskSpaceCollect() ([]DiskSpaceMetric, error) {

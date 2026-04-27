@@ -40,7 +40,7 @@ type DiskIOMetric struct {
     IOPSWrite float64 // write operations per second
 }
 
-type DiskIOPreviousState struct {
+type DiskIOTickState struct {
     Counters map[string]diskIOCounters // keyed by device name
 }
 
@@ -76,7 +76,7 @@ type DiskSpaceMetric struct {
     UsedPercent float64 // used percentage (0-100)
 }
 
-type DiskSpacePreviousState struct{} // unused — no delta tracking
+type DiskSpaceTickState struct{} // unused — no delta tracking
 ```
 
 ---
@@ -109,7 +109,7 @@ for _, s := range metrics.DiskSpace {
 
 ## Notes for LLMs
 
-- Disk I/O is **delta-based** — first tick returns zeros. Pass back `DiskIOPreviousState` each tick.
+- Disk I/O is **delta-based** — first tick returns zeros. Pass back `DiskIOTickState` each tick.
 - Disk space is **absolute** — no previous state needed.
 - Disk I/O throughput is in MB/s (divides by 1048576 = 2^20), not raw bytes/sec.
 - Error handling: if `disk.Usage()` fails for a partition, that partition is skipped (`continue`), not fatal.

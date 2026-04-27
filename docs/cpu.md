@@ -32,7 +32,7 @@ type CPUMetrics struct {
     Cores   []float64 // per-core usage %, length = core count
 }
 
-type CPUPreviousState struct {
+type CPUTickState struct {
     Times []cpu.TimesStat // cumulative times from prior sample
 }
 ```
@@ -40,7 +40,7 @@ type CPUPreviousState struct {
 ## Usage Pattern
 
 ```go
-var prev sysprobe.PreviousState
+var prev sysprobe.TickState
 
 for range ticker.C {
     metrics, newState, err := sysprobe.Collect(sysprobe.Options{CPU: true}, prev)
@@ -69,4 +69,4 @@ for range ticker.C {
 - CPU metrics are **delta-based** — the first tick always returns zeros. This is intentional so callers know which cores exist.
 - `roundTwo()` applies to both per-core and average values.
 - No filtering or interface selection — all online cores are reported.
-- The `CPUPreviousState.Times` slice is replaced entirely each tick (not mutated in place).
+- The `CPUTickState.Times` slice is replaced entirely each tick (not mutated in place).

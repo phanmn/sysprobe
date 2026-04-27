@@ -1,23 +1,22 @@
 # sysprobe — CLI Agent Context
 
 ## What This Is
-A standalone Go package that extracts system metric collection logic from the [Beszel](https://github.com/phanmn/beszel) monitoring agent. Provides CPU, memory, disk I/O + space, network I/O, and GPU (nvidia-smi) metrics via a single `Collect()` call. Mirrors Beszel's metric types exactly.
+Provides CPU, memory, disk I/O + space, network I/O, and GPU (nvidia-smi) metrics via a single `Collect()` call. Mirrors Beszel's metric types exactly.
 
 ## Module
 - **Path**: `github.com/phanmn/sysprobe`
-- **Go version**: 1.26+
+- **Go version**: 1.25+
 - **Single dependency**: `github.com/shirou/gopsutil/v4` (all metric sources)
 - **Layout**: Flat single package at module root — no subdirectories, no internal packages
 
 ## Public API (`sysprobe.go`)
 | Function | Description |
 |---|---|
-| `Collect(opts Options, prev PreviousState) (*Metrics, PreviousState, error)` | Collect all enabled subsystems. Returns new metrics + state to pass back on next tick. Delta-based collectors (CPU, disk I/O, network) require previous state for rate calculation. First tick returns zeroed delta metrics so callers see which interfaces/disks/cores exist from the start. |
-| `GPUCollect() ([]GPUInfo, error)` | Returns latest GPU snapshot from background nvidia-smi poller. Call after `GPUStart()`. |
-| `GPUStart(ctx context.Context, interval time.Duration) error` | Starts async nvidia-smi polling goroutine (~5s default). |
+| `Collect(opts Options, prev TickState) (Metrics, TickState, error)` | Collect all enabled subsystems. Returns new metrics + state to pass back on next tick. Delta-based collectors (CPU, disk I/O, network) require previous state for rate calculation. First tick returns zeroed delta metrics so callers see which interfaces/disks/cores exist from the start. |
+| `GPUCollect() (GPUMetrics, error)` | Returns latest GPU snapshot from background nvidia-smi poller. Auto-starts on first call. |
 | `GPUStop()` | Stops the GPU polling goroutine. |
-| `JSONExport(metrics *Metrics) (string, error)` | Convenience helper — marshals metrics to JSON string. |
-| `JSONExportGPU(gpus []GPUInfo) (string, error)` | Convenience helper — marshals GPU info to JSON string. |
+| `JSONExport(m Metrics) ([]byte, error)` | Convenience helper — marshals metrics to pretty-printed JSON bytes. |
+| `JSONExportGPU(g GPUMetrics) ([]byte, error)` | Convenience helper — marshals GPU metrics to pretty-printed JSON bytes. |
 
 ## Metric Kinds
 | Collector | Kind | Units | Notes |
@@ -55,5 +54,5 @@ rtk go vet .         # static analysis
 ## Critical Context for LLMs
 - Module path is `github.com/phanmn/sysprobe`. Import with `go get` after pushing to GitHub, or use `go.work` for local dev.
 - All metric struct fields have `json:` tags — callers can marshal directly with `encoding/json` without using the provided helpers.
-- `PreviousState` is a single struct that holds all delta-tracking state (CPU, disk I/O, network counters) plus GPU snapshot. Caller passes it back verbatim on each tick.
+- `TickState` is a single struct that holds all delta-tracking state (CPU, disk I/O, network counters). Caller passes it back verbatim on each tick.
 - No git submodules, no vendoring, no Makefile — keep it minimal.
